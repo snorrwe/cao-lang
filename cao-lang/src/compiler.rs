@@ -935,9 +935,6 @@ impl<'a> Compiler<'a> {
             CardBody::CreateTable => {
                 self.push_instruction(Instruction::InitTable);
             }
-            CardBody::Comment(_) => {
-                // noop
-            }
         }
         Ok(())
     }

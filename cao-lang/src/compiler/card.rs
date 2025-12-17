@@ -99,7 +99,6 @@ pub enum CardBody {
     /// Create a Table from the results of the provided cards
     Array(Vec<Card>),
     Closure(Box<Function>),
-    Comment(String),
 }
 
 #[derive(Debug, Default, Clone)]
@@ -198,7 +197,6 @@ impl Card {
             CardBody::Array(_) => "Array",
             CardBody::NativeFunction(_) => "Native Function",
             CardBody::Closure(_) => "Closure",
-            CardBody::Comment(_) => "Comment",
         }
     }
 
@@ -309,7 +307,6 @@ impl Card {
             CardBody::ScalarInt(_)
             | CardBody::ScalarFloat(_)
             | CardBody::StringLiteral(_)
-            | CardBody::Comment(_)
             | CardBody::Function(_)
             | CardBody::CreateTable
             | CardBody::ReadVar(_)
@@ -354,7 +351,6 @@ impl Card {
             CardBody::ScalarInt(_)
             | CardBody::ScalarFloat(_)
             | CardBody::StringLiteral(_)
-            | CardBody::Comment(_)
             | CardBody::Function(_)
             | CardBody::CreateTable
             | CardBody::ReadVar(_)
@@ -403,7 +399,6 @@ impl Card {
             CardBody::ScalarInt(_)
             | CardBody::ScalarFloat(_)
             | CardBody::StringLiteral(_)
-            | CardBody::Comment(_)
             | CardBody::Function(_)
             | CardBody::CreateTable
             | CardBody::ReadVar(_)
@@ -495,7 +490,6 @@ impl Card {
             | CardBody::ScalarInt(_)
             | CardBody::ScalarFloat(_)
             | CardBody::StringLiteral(_)
-            | CardBody::Comment(_)
             | CardBody::ScalarNil
             | CardBody::CreateTable
             | CardBody::Abort => return None,
@@ -572,7 +566,6 @@ impl Card {
             | CardBody::ScalarInt(_)
             | CardBody::ScalarFloat(_)
             | CardBody::StringLiteral(_)
-            | CardBody::Comment(_)
             | CardBody::ScalarNil
             | CardBody::CreateTable
             | CardBody::Abort => return None,
@@ -667,7 +660,6 @@ impl Card {
             | CardBody::ScalarInt(_)
             | CardBody::ScalarFloat(_)
             | CardBody::StringLiteral(_)
-            | CardBody::Comment(_)
             | CardBody::ScalarNil
             | CardBody::CreateTable
             | CardBody::Abort => return None,
@@ -772,7 +764,6 @@ impl Card {
             | CardBody::ScalarInt(_)
             | CardBody::ScalarFloat(_)
             | CardBody::StringLiteral(_)
-            | CardBody::Comment(_)
             | CardBody::ScalarNil
             | CardBody::CreateTable
             | CardBody::Abort => return Err(card),
