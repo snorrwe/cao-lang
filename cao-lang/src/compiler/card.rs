@@ -11,7 +11,10 @@ pub struct CardId(pub u64);
 #[derive(Default, Debug, Clone)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Card {
-    #[cfg_attr(feature = "serde", serde(skip, default = "random_id"))]
+    /// Transient id of the card. Is not persisted!
+    ///
+    /// Intended for use by an integrating app to assoticate transient state with cards
+    #[cfg_attr(feature = "serde", serde(skip, default = "next_id"))]
     pub id: CardId,
     #[cfg_attr(feature = "serde", serde(flatten))]
     pub body: CardBody,
@@ -19,14 +22,14 @@ pub struct Card {
 
 static NEXT_ID: AtomicU64 = AtomicU64::new(1);
 
-fn random_id() -> CardId {
+fn next_id() -> CardId {
     CardId(NEXT_ID.fetch_add(1, std::sync::atomic::Ordering::Relaxed))
 }
 
 impl From<CardBody> for Card {
     fn from(value: CardBody) -> Self {
         Self {
-            id: random_id(),
+            id: next_id(),
             body: value,
         }
     }
