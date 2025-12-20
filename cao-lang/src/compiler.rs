@@ -79,13 +79,19 @@ pub fn compile(
     compilation_unit: CaoProgram,
     compile_options: impl Into<Option<CompileOptions>>,
 ) -> CompilationResult<CaoCompiledProgram> {
-    let options = compile_options.into().unwrap_or_default();
-    let compilation_unit = compilation_unit
-        .into_ir_stream(options.recursion_limit)
-        .map_err(|err| CompilationError::with_loc(err, Trace::default()))?;
+    fn compile(
+        compilation_unit: CaoProgram,
+        options: CompileOptions,
+    ) -> CompilationResult<CaoCompiledProgram> {
+        let compilation_unit = compilation_unit
+            .into_ir_stream(options.recursion_limit)
+            .map_err(|err| CompilationError::with_loc(err, Trace::default()))?;
 
-    let mut compiler = Compiler::new();
-    compiler.compile(&compilation_unit, options)
+        let mut compiler = Compiler::new();
+        compiler.compile(&compilation_unit, options)
+    }
+    let options = compile_options.into().unwrap_or_default();
+    compile(compilation_unit, options)
 }
 
 impl Default for Compiler<'_> {
