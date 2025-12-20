@@ -67,8 +67,6 @@ pub enum CardBody {
     CallNative(Box<CallNode>),
     /// Children = [condition, then]
     IfTrue(BinaryExpression),
-    /// Children = [condition, else]
-    IfFalse(BinaryExpression),
     /// Children = [condition, then, else]
     IfElse(Box<[Card; 3]>),
     /// Function name
@@ -179,7 +177,6 @@ impl Card {
             CardBody::StringLiteral(_) => "StringLiteral",
             CardBody::CallNative(_) => "Call Native Function",
             CardBody::IfTrue(_) => "IfTrue",
-            CardBody::IfFalse(_) => "IfFalse",
             CardBody::Call(_) => "Call Function",
             CardBody::SetGlobalVar(_) => "SetGlobalVar",
             CardBody::ReadVar(_) => "ReadVar",
@@ -298,7 +295,6 @@ impl Card {
             | CardBody::Or(_b)
             | CardBody::GetProperty(_b)
             | CardBody::IfTrue(_b)
-            | CardBody::IfFalse(_b)
             | CardBody::While(_b)
             | CardBody::Get(_b)
             | CardBody::AppendTable(_b)
@@ -343,7 +339,6 @@ impl Card {
             | CardBody::Or(b)
             | CardBody::GetProperty(b)
             | CardBody::IfTrue(b)
-            | CardBody::IfFalse(b)
             | CardBody::While(b)
             | CardBody::Get(b)
             | CardBody::AppendTable(b)
@@ -391,7 +386,6 @@ impl Card {
             | CardBody::Or(b)
             | CardBody::GetProperty(b)
             | CardBody::IfTrue(b)
-            | CardBody::IfFalse(b)
             | CardBody::While(b)
             | CardBody::Get(b)
             | CardBody::AppendTable(b)
@@ -433,7 +427,7 @@ impl Card {
                 1 => res = &mut rep.body,
                 _ => return None,
             },
-            CardBody::IfTrue(c) | CardBody::IfFalse(c) => return c.get_mut(i),
+            CardBody::IfTrue(c) => return c.get_mut(i),
             CardBody::ForEach(fe) => {
                 let ForEach {
                     i: _,
@@ -510,7 +504,7 @@ impl Card {
                 1 => res = &rep.body,
                 _ => return None,
             },
-            CardBody::IfTrue(c) | CardBody::IfFalse(c) => return c.get(i),
+            CardBody::IfTrue(c) => return c.get(i),
             CardBody::ForEach(fe) => {
                 let ForEach {
                     i: _,
@@ -596,7 +590,7 @@ impl Card {
                 1 => res = std::mem::replace(&mut rep.body, CardBody::ScalarNil.into()),
                 _ => return None,
             },
-            CardBody::IfTrue(_) | CardBody::IfFalse(_) => {
+            CardBody::IfTrue(_) => {
                 let c = self.get_child_mut(i)?;
                 res = std::mem::replace::<Card>(c, CardBody::ScalarNil.into());
             }
@@ -712,7 +706,6 @@ impl Card {
             },
             CardBody::While(_)
             | CardBody::IfTrue(_)
-            | CardBody::IfFalse(_)
             | CardBody::Add(_)
             | CardBody::Sub(_)
             | CardBody::Mul(_)

@@ -174,15 +174,10 @@ fn simple_if_statement_skips_if_false() {
         submodules: Default::default(),
         functions: [(
             "main".into(),
-            Function::default()
-                .with_card(CardBody::IfTrue(Box::new([
-                    CardBody::ScalarInt(0).into(),
-                    Card::set_global_var("result", CardBody::ScalarInt(69)),
-                ])))
-                .with_card(CardBody::IfFalse(Box::new([
-                    CardBody::ScalarInt(1).into(),
-                    Card::set_global_var("result", CardBody::ScalarInt(42)),
-                ]))),
+            Function::default().with_card(CardBody::IfTrue(Box::new([
+                CardBody::ScalarInt(0).into(),
+                Card::set_global_var("result", CardBody::ScalarInt(69)),
+            ]))),
         )]
         .into(),
     };

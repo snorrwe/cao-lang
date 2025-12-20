@@ -723,13 +723,6 @@ impl<'a> Compiler<'a> {
                     std::ptr::write_unaligned(ptr, self.program.bytecode.len() as i32);
                 }
             }
-            CardBody::IfFalse(jmp) => {
-                let [cond, body] = &**jmp;
-                self.compile_subexpr(slice::from_ref(cond))?;
-                self.current_index.push_subindex(1);
-                self.encode_if_then(Instruction::GotoIfTrue, |c| c.process_card(body))?;
-                self.current_index.pop_subindex();
-            }
             CardBody::IfTrue(jmp) => {
                 let [cond, body] = &**jmp;
                 self.compile_subexpr(slice::from_ref(cond))?;
