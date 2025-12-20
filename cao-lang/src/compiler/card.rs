@@ -89,7 +89,7 @@ pub enum CardBody {
     ForEach(Box<ForEach>),
     /// Single card that decomposes into multiple cards
     CompositeCard(Box<CompositeCard>),
-    /// Jump to the function that's on the top of the stack
+    /// Jump to the function given as argument
     DynamicCall(Box<DynamicJump>),
     /// Get the given integer row of a table
     /// [Table, Index]
