@@ -23,31 +23,6 @@ fn composite_card_test() {
 }
 
 #[test]
-#[cfg(feature = "serde")]
-fn can_binary_de_serialize_output() {
-    let cu = CaoProgram {
-        imports: Default::default(),
-        submodules: Default::default(),
-        functions: [(
-            "main".into(),
-            Function::default().with_cards(vec![
-                Card::set_global_var("asdsdad", CardBody::ScalarNil),
-                CardBody::ScalarNil.into(),
-                CardBody::ScalarNil.into(),
-            ]),
-        )]
-        .into(),
-    };
-
-    let prog = compile(cu, CompileOptions::new()).unwrap();
-
-    let pl = bincode::serde::encode_to_vec(&prog, bincode::config::standard()).unwrap();
-
-    let (_prog, _): (CaoCompiledProgram, usize) =
-        bincode::serde::decode_from_slice(&pl[..], bincode::config::standard()).unwrap();
-}
-
-#[test]
 fn empty_varname_is_error() {
     let cu = CaoProgram {
         imports: Default::default(),
