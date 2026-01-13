@@ -21,34 +21,31 @@ pub fn filter() -> Function {
         .with_arg("callback")
         .with_cards(vec![
             Card::set_var("res", CardBody::CreateTable),
-            CardBody::ForEach(Box::new(
-                ForEach {
-                    i: Some("i".to_string()),
-                    k: Some("k".to_string()),
-                    v: Some("v".to_string()),
-                    iterable: Box::new(Card::read_var("iterable")),
-                    body: Box::new(Card::composite_card(
-                        "_",
-                        vec![CardBody::IfTrue(Box::new([
-                            Card::dynamic_call(
-                                Card::read_var("callback"),
-                                vec![
-                                    Card::read_var("i"),
-                                    Card::read_var("v"),
-                                    Card::read_var("k"),
-                                ],
-                            ),
-                            Card::set_property(
+            CardBody::ForEach(Box::new(ForEach {
+                i: Some("i".to_string()),
+                k: Some("k".to_string()),
+                v: Some("v".to_string()),
+                iterable: Box::new(Card::read_var("iterable")),
+                body: Box::new(Card::composite_card(
+                    "_",
+                    vec![CardBody::IfTrue(Box::new([
+                        Card::dynamic_call(
+                            Card::read_var("callback"),
+                            vec![
+                                Card::read_var("i"),
                                 Card::read_var("v"),
-                                Card::read_var("res"),
                                 Card::read_var("k"),
-                            ),
-                        ]))
-                        .into()],
-                    )),
-                }
-                .into(),
-            ))
+                            ],
+                        ),
+                        Card::set_property(
+                            Card::read_var("v"),
+                            Card::read_var("res"),
+                            Card::read_var("k"),
+                        ),
+                    ]))
+                    .into()],
+                )),
+            }))
             .into(),
             Card::return_card(Card::read_var("res")),
         ])
@@ -95,33 +92,30 @@ pub fn map() -> Function {
         .with_arg("callback")
         .with_cards(vec![
             Card::set_var("res", CardBody::CreateTable),
-            CardBody::ForEach(Box::new(
-                ForEach {
-                    i: Some("i".to_string()),
-                    k: Some("k".to_string()),
-                    v: Some("v".to_string()),
-                    iterable: Box::new(Card::read_var("iterable")),
-                    body: Box::new(Card::composite_card(
-                        "_",
-                        vec![Card::set_property(
-                            Card::composite_card(
-                                "",
-                                vec![Card::dynamic_call(
-                                    Card::read_var("callback"),
-                                    vec![
-                                        Card::read_var("i"),
-                                        Card::read_var("v"),
-                                        Card::read_var("k"),
-                                    ],
-                                )],
-                            ),
-                            Card::read_var("res"),
-                            Card::read_var("k"),
-                        )],
-                    )),
-                }
-                .into(),
-            ))
+            CardBody::ForEach(Box::new(ForEach {
+                i: Some("i".to_string()),
+                k: Some("k".to_string()),
+                v: Some("v".to_string()),
+                iterable: Box::new(Card::read_var("iterable")),
+                body: Box::new(Card::composite_card(
+                    "_",
+                    vec![Card::set_property(
+                        Card::composite_card(
+                            "",
+                            vec![Card::dynamic_call(
+                                Card::read_var("callback"),
+                                vec![
+                                    Card::read_var("i"),
+                                    Card::read_var("v"),
+                                    Card::read_var("k"),
+                                ],
+                            )],
+                        ),
+                        Card::read_var("res"),
+                        Card::read_var("k"),
+                    )],
+                )),
+            }))
             .into(),
             Card::return_card(Card::read_var("res")),
         ])
