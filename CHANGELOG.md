@@ -1,4 +1,16 @@
 # Changelog
+## v0.3.1
+
+
+### Refactor
+
+- [**breaking**] Remove Comment cards ([ba261e9](ba261e9e21caf54f2ff9b7f0355ac33e8c2d8d0e))
+- [**breaking**] Remove the IfFalse card ([e40018c](e40018c50b92a5a49236a68e035870e4338afc70))
+- [**breaking**] Do not publish binary distributions for pypy ([d56434d](d56434d4018cca78224f0022c33c3533babcec91))
+
+### Chore
+
+- Update dependencies to latest versions ([ecd312b](ecd312b14c0dd780d36cc98f7e85eff9ea7e5141))
 ## v0.3.0
 
 
