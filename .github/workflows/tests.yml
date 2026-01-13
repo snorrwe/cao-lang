@@ -2,11 +2,11 @@ name: Cao-Lang tests
 
 on:
   push:
-      branches:
-        - main
+    branches:
+      - main
   pull_request:
-      branches:
-        - main
+    branches:
+      - main
 
 concurrency:
   group: ${{ github.ref }}
@@ -138,7 +138,6 @@ jobs:
         with:
           python-version: "3.12"
 
-
       - name: "Setup Python 310"
         uses: actions/setup-python@v2.2.1
         with:
@@ -147,7 +146,7 @@ jobs:
       - name: "Setup Pypy"
         uses: actions/setup-python@v2.2.1
         with:
-          python-version: "pypy-3.9"
+          python-version: "pypy-3.11"
 
       - run: pip install tox
       - run: tox -q -p auto

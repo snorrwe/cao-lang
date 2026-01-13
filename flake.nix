@@ -30,6 +30,7 @@
             python3
             python3Packages.tox
             python3Packages.setuptools-rust
+            pypy3
             just
             nodejs
             (rust-bin.nightly.latest.default.override {
