@@ -19,6 +19,7 @@ pub enum StringDecodeError {
 /// Objects that can act as Cao-Lang functions
 pub trait VmFunction<Aux> {
     fn call(&self, vm: &mut Vm<Aux>) -> ShallowExecutionResult;
+    fn n_args(&self) -> usize;
 }
 
 pub type VmFunction1<Aux, T1> = fn(&mut Vm<Aux>, T1) -> ShallowExecutionResult;
@@ -76,6 +77,10 @@ where
     fn call(&self, vm: &mut Vm<Aux>) -> ShallowExecutionResult {
         self(vm)
     }
+
+    fn n_args(&self) -> usize {
+        0
+    }
 }
 
 fn conversion_error(input: usize, expected: &str, actual: &str) -> ExecutionErrorPayload {
@@ -95,6 +100,10 @@ where
             T1::try_from(v1).map_err(|_| conversion_error(1, type_name::<T1>(), v1.type_name()))?;
         self(vm, v1)
     }
+
+    fn n_args(&self) -> usize {
+        1
+    }
 }
 
 impl<Aux, T1, T2> VmFunction<Aux> for fn(&mut Vm<Aux>, T1, T2) -> ShallowExecutionResult
@@ -110,6 +119,10 @@ where
         let v1 =
             T1::try_from(v1).map_err(|_| conversion_error(1, type_name::<T1>(), v1.type_name()))?;
         self(vm, v1, v2)
+    }
+
+    fn n_args(&self) -> usize {
+        2
     }
 }
 
@@ -130,6 +143,10 @@ where
         let v1 =
             T1::try_from(v1).map_err(|_| conversion_error(1, type_name::<T1>(), v1.type_name()))?;
         self(vm, v1, v2, v3)
+    }
+
+    fn n_args(&self) -> usize {
+        3
     }
 }
 
@@ -155,5 +172,9 @@ where
         let v1 =
             T1::try_from(v1).map_err(|_| conversion_error(1, type_name::<T1>(), v1.type_name()))?;
         self(vm, v1, v2, v3, v4)
+    }
+
+    fn n_args(&self) -> usize {
+        4
     }
 }
