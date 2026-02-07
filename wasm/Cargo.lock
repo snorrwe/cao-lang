@@ -39,7 +39,7 @@ dependencies = [
 
 [[package]]
 name = "cao-lang"
-version = "0.3.0"
+version = "0.3.1"
 dependencies = [
  "arrayvec",
  "bytemuck",
@@ -54,7 +54,7 @@ dependencies = [
 
 [[package]]
 name = "cao-lang-wasm"
-version = "0.3.0"
+version = "0.3.1"
 dependencies = [
  "cao-lang",
  "console_error_panic_hook",
