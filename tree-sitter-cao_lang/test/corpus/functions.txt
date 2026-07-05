@@ -1,0 +1,80 @@
+==================
+fibonacci recursive
+==================
+
+fn main(N) {
+    global result = fib(N);
+}
+
+fn fib(n) {
+    return if n <= 2 { n } else { fib_again(n) };
+}
+
+fn fib_again(n) {
+    return fib(n-1) + fib(n-2);
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list
+      (identifier))
+    (block
+      (global_var_statement
+        name: (identifier)
+        value: (expression
+          (call_expression
+            function: (identifier)
+            (expression
+              (identifier)))))))
+  (function_definition
+    (identifier)
+    (parameter_list
+      (identifier))
+    (block
+      (return_statement
+        (expression
+          (if_expression
+            condition: (expression
+              (binary_expression
+                left: (expression
+                  (identifier))
+                right: (expression
+                  (integer))))
+            consequence: (expression_block
+              (expression
+                (identifier)))
+            alternative: (expression_block
+              (expression
+                (call_expression
+                  function: (identifier)
+                  (expression
+                    (identifier))))))))))
+  (function_definition
+    (identifier)
+    (parameter_list
+      (identifier))
+    (block
+      (return_statement
+        (expression
+          (binary_expression
+            left: (expression
+              (call_expression
+                function: (identifier)
+                (expression
+                  (binary_expression
+                    left: (expression
+                      (identifier))
+                    right: (expression
+                      (integer))))))
+            right: (expression
+              (call_expression
+                function: (identifier)
+                (expression
+                  (binary_expression
+                    left: (expression
+                      (identifier))
+                    right: (expression
+                      (integer))))))))))))
