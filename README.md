@@ -1,7 +1,6 @@
 # Cao-Lang
 
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/caolo-game/cao-lang/tests.yml?branch=main)
-![MIT license](https://img.shields.io/github/license/caolo-game/cao-lang)
+![MIT license](https://img.shields.io/github/license/snorrwe/cao-lang)
 ![Crates.io version](https://img.shields.io/crates/v/cao-lang)
 ![PyPI version](https://img.shields.io/pypi/v/cao-lang)
 ![npm version](https://img.shields.io/npm/v/@caolo-game/cao-lang-wasm)
