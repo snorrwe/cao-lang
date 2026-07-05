@@ -1,0 +1,113 @@
+==================
+multiplicative binds tighter than additive
+==================
+
+fn f() {
+    return 1 + 2 * 3;
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (block
+      (return_statement
+        (expression
+          (binary_expression
+            left: (expression
+              (integer))
+            right: (expression
+              (binary_expression
+                left: (expression
+                  (integer))
+                right: (expression
+                  (integer))))))))))
+
+==================
+comparison binds loosest
+==================
+
+fn f() {
+    return 1 + 2 <= 3 * 4;
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (block
+      (return_statement
+        (expression
+          (binary_expression
+            left: (expression
+              (binary_expression
+                left: (expression
+                  (integer))
+                right: (expression
+                  (integer))))
+            right: (expression
+              (binary_expression
+                left: (expression
+                  (integer))
+                right: (expression
+                  (integer))))))))))
+
+==================
+left-associativity of additive operators
+==================
+
+fn f() {
+    return 1 - 2 - 3;
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (block
+      (return_statement
+        (expression
+          (binary_expression
+            left: (expression
+              (binary_expression
+                left: (expression
+                  (integer))
+                right: (expression
+                  (integer))))
+            right: (expression
+              (integer))))))))
+
+==================
+else-less if expression
+==================
+
+fn f(n) {
+    return if n <= 2 { n };
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list
+      (identifier))
+    (block
+      (return_statement
+        (expression
+          (if_expression
+            condition: (expression
+              (binary_expression
+                left: (expression
+                  (identifier))
+                right: (expression
+                  (integer))))
+            consequence: (expression_block
+              (expression
+                (identifier)))))))))

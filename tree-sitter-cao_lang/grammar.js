@@ -82,8 +82,7 @@ export default grammar({
         "if",
         field("condition", $.expression),
         field("consequence", $.expression_block),
-        "else",
-        field("alternative", $.expression_block),
+        optional(seq("else", field("alternative", $.expression_block))),
       ),
 
     expression_block: ($) => seq("{", $.expression, "}"),
