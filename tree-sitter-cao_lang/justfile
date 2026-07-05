@@ -5,3 +5,10 @@ build:
     tree-sitter generate
 
 alias b := build
+
+test: build
+    #!/usr/bin/env bash
+    set -euxo pipefail
+    for test in ./test/*.caol; do
+        tree-sitter parse $test
+    done
