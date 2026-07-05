@@ -1,0 +1,172 @@
+==================
+while loop
+==================
+
+fn f(n) {
+    while n <= 10 {
+        n = n + 1;
+    }
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list
+      (identifier))
+    (block
+      (while_statement
+        condition: (expression
+          (binary_expression
+            left: (expression
+              (identifier))
+            right: (expression
+              (integer))))
+        body: (block
+          (local_var_statement
+            name: (identifier)
+            value: (expression
+              (binary_expression
+                left: (expression
+                  (identifier))
+                right: (expression
+                  (integer))))))))))
+
+==================
+repeat loop with loop variable
+==================
+
+fn f() {
+    repeat 3 as i {
+        return i;
+    }
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (block
+      (repeat_statement
+        count: (expression
+          (integer))
+        var: (identifier)
+        body: (block
+          (return_statement
+            (expression
+              (identifier))))))))
+
+==================
+repeat loop without loop variable
+==================
+
+fn f() {
+    repeat 3 {
+        return 1;
+    }
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (block
+      (repeat_statement
+        count: (expression
+          (integer))
+        body: (block
+          (return_statement
+            (expression
+              (integer))))))))
+
+==================
+foreach with value only
+==================
+
+fn f(xs) {
+    foreach v in xs {
+        return v;
+    }
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list
+      (identifier))
+    (block
+      (foreach_statement
+        bindings: (foreach_bindings
+          v: (identifier))
+        iterable: (expression
+          (identifier))
+        body: (block
+          (return_statement
+            (expression
+              (identifier))))))))
+
+==================
+foreach with key and value
+==================
+
+fn f(xs) {
+    foreach k, v in xs {
+        return v;
+    }
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list
+      (identifier))
+    (block
+      (foreach_statement
+        bindings: (foreach_bindings
+          k: (identifier)
+          v: (identifier))
+        iterable: (expression
+          (identifier))
+        body: (block
+          (return_statement
+            (expression
+              (identifier))))))))
+
+==================
+foreach with index, key, and value
+==================
+
+fn f(xs) {
+    foreach i, k, v in xs {
+        return v;
+    }
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list
+      (identifier))
+    (block
+      (foreach_statement
+        bindings: (foreach_bindings
+          i: (identifier)
+          k: (identifier)
+          v: (identifier))
+        iterable: (expression
+          (identifier))
+        body: (block
+          (return_statement
+            (expression
+              (identifier))))))))

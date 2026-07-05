@@ -1,0 +1,69 @@
+==================
+empty table literal
+==================
+
+fn f() {
+    return #{};
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (block
+      (return_statement
+        (expression
+          (table_expression))))))
+
+==================
+table literal with identifier keys
+==================
+
+fn f() {
+    return #{ a: 1, b: 2 };
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (block
+      (return_statement
+        (expression
+          (table_expression
+            (table_field
+              key: (identifier)
+              value: (expression
+                (integer)))
+            (table_field
+              key: (identifier)
+              value: (expression
+                (integer)))))))))
+
+==================
+table literal with string key
+==================
+
+fn f() {
+    return #{ "a-b": 1 };
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (block
+      (return_statement
+        (expression
+          (table_expression
+            (table_field
+              key: (string
+                (string_content))
+              value: (expression
+                (integer)))))))))

@@ -1,0 +1,81 @@
+==================
+closure with expression body
+==================
+
+fn f() {
+    return (a, b) => a + b;
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (block
+      (return_statement
+        (expression
+          (closure_expression
+            parameters: (parameter_list
+              (identifier)
+              (identifier))
+            body: (expression
+              (binary_expression
+                left: (expression
+                  (identifier))
+                right: (expression
+                  (identifier))))))))))
+
+==================
+zero-arg closure with block body
+==================
+
+fn f() {
+    return () => {
+        return 1;
+    };
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (block
+      (return_statement
+        (expression
+          (closure_expression
+            parameters: (parameter_list)
+            body: (block
+              (return_statement
+                (expression
+                  (integer))))))))))
+
+==================
+closure passed as call argument
+==================
+
+fn f() {
+    return call(1, (x) => x);
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (block
+      (return_statement
+        (expression
+          (call_expression
+            function: (identifier)
+            (expression
+              (integer))
+            (expression
+              (closure_expression
+                parameters: (parameter_list
+                  (identifier))
+                body: (expression
+                  (identifier))))))))))

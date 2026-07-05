@@ -84,6 +84,114 @@ fn f() {
               (integer))))))))
 
 ==================
+float literal
+==================
+
+fn f() {
+    return 1.5;
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (block
+      (return_statement
+        (expression
+          (float))))))
+
+==================
+string literal with escapes
+==================
+
+fn f() {
+    return "hi\n\u{1F600}";
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (block
+      (return_statement
+        (expression
+          (string
+            (string_content)
+            (escape_sequence)
+            (escape_sequence)))))))
+
+==================
+negative integer literal
+==================
+
+fn f() {
+    return -5;
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (block
+      (return_statement
+        (expression
+          (integer))))))
+
+==================
+subtraction is not swallowed by signed literal
+==================
+
+fn f(a) {
+    return a - 5;
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list
+      (identifier))
+    (block
+      (return_statement
+        (expression
+          (binary_expression
+            left: (expression
+              (identifier))
+            right: (expression
+              (integer))))))))
+
+==================
+subtraction of a negative literal
+==================
+
+fn f(a) {
+    return a - -5;
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list
+      (identifier))
+    (block
+      (return_statement
+        (expression
+          (binary_expression
+            left: (expression
+              (identifier))
+            right: (expression
+              (integer))))))))
+
+==================
 else-less if expression
 ==================
 

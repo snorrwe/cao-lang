@@ -1,0 +1,43 @@
+==================
+array literal
+==================
+
+fn f() {
+    return [1, 2, 3];
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (block
+      (return_statement
+        (expression
+          (array_expression
+            (expression
+              (integer))
+            (expression
+              (integer))
+            (expression
+              (integer))))))))
+
+==================
+empty array literal
+==================
+
+fn f() {
+    return [];
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (block
+      (return_statement
+        (expression
+          (array_expression))))))

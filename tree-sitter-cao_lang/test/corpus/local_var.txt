@@ -1,0 +1,27 @@
+==================
+local variable assignment
+==================
+
+fn f() {
+    x = 1 + 2;
+    return x;
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (block
+      (local_var_statement
+        name: (identifier)
+        value: (expression
+          (binary_expression
+            left: (expression
+              (integer))
+            right: (expression
+              (integer)))))
+      (return_statement
+        (expression
+          (identifier))))))

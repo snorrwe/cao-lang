@@ -1,0 +1,123 @@
+==================
+dotted property access chain
+==================
+
+fn f(a) {
+    return a.b.c;
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list
+      (identifier))
+    (block
+      (return_statement
+        (expression
+          (postfix_expression
+            (identifier)
+            property: (identifier)
+            property: (identifier)))))))
+
+==================
+index access
+==================
+
+fn f(a) {
+    return a[0];
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list
+      (identifier))
+    (block
+      (return_statement
+        (expression
+          (postfix_expression
+            (identifier)
+            index: (expression
+              (integer))))))))
+
+==================
+method call after dotted access
+==================
+
+fn f(a) {
+    return a.b.method(1, 2);
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list
+      (identifier))
+    (block
+      (return_statement
+        (expression
+          (call_expression
+            function: (postfix_expression
+              (identifier)
+              property: (identifier)
+              property: (identifier))
+            (expression
+              (integer))
+            (expression
+              (integer))))))))
+
+==================
+property access after a call
+==================
+
+fn f() {
+    return g().b;
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (block
+      (return_statement
+        (expression
+          (postfix_expression
+            (call_expression
+              function: (identifier))
+            property: (identifier)))))))
+
+==================
+mixed dotted and index chain binds tighter than arithmetic
+==================
+
+fn f(a) {
+    return a.b[0] + 1;
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list
+      (identifier))
+    (block
+      (return_statement
+        (expression
+          (binary_expression
+            left: (expression
+              (postfix_expression
+                (identifier)
+                property: (identifier)
+                index: (expression
+                  (integer))))
+            right: (expression
+              (integer))))))))

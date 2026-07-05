@@ -1,0 +1,60 @@
+==================
+submodule with a function and an import
+==================
+
+mod math {
+    import std.sqrt;
+
+    fn square(x) {
+        return x * x;
+    }
+}
+
+---
+
+(source_file
+  (module_definition
+    name: (identifier)
+    (import_statement
+      path: (dotted_path
+        (identifier)
+        (identifier)))
+    (function_definition
+      (identifier)
+      (parameter_list
+        (identifier))
+      (block
+        (return_statement
+          (expression
+            (binary_expression
+              left: (expression
+                (identifier))
+              right: (expression
+                (identifier)))))))))
+
+==================
+nested submodules
+==================
+
+mod outer {
+    mod inner {
+        fn f() {
+            return 1;
+        }
+    }
+}
+
+---
+
+(source_file
+  (module_definition
+    name: (identifier)
+    (module_definition
+      name: (identifier)
+      (function_definition
+        (identifier)
+        (parameter_list)
+        (block
+          (return_statement
+            (expression
+              (integer))))))))

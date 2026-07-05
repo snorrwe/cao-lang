@@ -1,0 +1,40 @@
+==================
+dotted import
+==================
+
+import math.sqrt;
+
+fn f() {
+    return sqrt(4);
+}
+
+---
+
+(source_file
+  (import_statement
+    path: (dotted_path
+      (identifier)
+      (identifier)))
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (block
+      (return_statement
+        (expression
+          (call_expression
+            function: (identifier)
+            (expression
+              (integer))))))))
+
+==================
+single-segment import
+==================
+
+import foo;
+
+---
+
+(source_file
+  (import_statement
+    path: (dotted_path
+      (identifier))))
