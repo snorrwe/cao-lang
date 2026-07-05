@@ -4,13 +4,13 @@ use pyo3::{
     wrap_pyfunction,
 };
 
-#[pyclass]
+#[pyclass(from_py_object)]
 #[derive(Clone)]
 pub struct CompilationUnit {
     inner: cao_lang::prelude::CaoProgram,
 }
 
-#[pyclass]
+#[pyclass(from_py_object)]
 #[derive(Clone)]
 pub struct CompilationOptions {
     inner: cao_lang::prelude::CompileOptions,
@@ -52,7 +52,7 @@ impl CompilationOptions {
     }
 }
 
-#[pyclass]
+#[pyclass(from_py_object)]
 #[derive(Clone)]
 pub struct CaoCompiledProgram {
     inner: cao_lang::prelude::CaoCompiledProgram,
