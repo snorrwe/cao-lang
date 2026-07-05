@@ -1,4 +1,11 @@
 [workspace]
-members = ["cao-lang", "py", "c", "xtask", "disassembler"]
+members = [
+    "cao-lang",
+    "py",
+    "c",
+    "xtask",
+    "disassembler",
+    "tree-sitter-cao_lang",
+]
 exclude = ["wasm"]
 resolver = "2"

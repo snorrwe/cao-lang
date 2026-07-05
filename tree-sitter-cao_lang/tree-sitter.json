@@ -1,0 +1,42 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "cao_lang",
+      "camelcase": "CaoLang",
+      "title": "CaoLang",
+      "scope": "source.cao_lang",
+      "file-types": [
+        "caol"
+      ],
+      "injection-regex": "^cao_lang$",
+      "class-name": "TreeSitterCaoLang"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "MIT",
+    "description": "CaoLang grammar for tree-sitter",
+    "authors": [
+      {
+        "name": "Daniel Kiss",
+        "email": "littlesnorrboy@gmail.com",
+        "url": "https://snorrwe.org"
+      }
+    ],
+    "links": {
+      "repository": "https://github.com/tree-sitter/tree-sitter-cao_lang",
+      "funding": ""
+    }
+  },
+  "bindings": {
+    "c": false,
+    "go": false,
+    "java": false,
+    "node": false,
+    "python": false,
+    "rust": true,
+    "swift": false,
+    "zig": false
+  }
+}

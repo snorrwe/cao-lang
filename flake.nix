@@ -50,6 +50,7 @@
             cargo-deny
             firefox
             git-cliff
+            lua55Packages.tree-sitter-cli
           ];
         };
       }

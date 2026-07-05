@@ -1,0 +1,7 @@
+_default:
+    @ just -l
+
+build:
+    tree-sitter generate
+
+alias b := build

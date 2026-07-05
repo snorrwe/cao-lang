@@ -21,3 +21,4 @@ docs/_build
 /venv/
 .envrc
 .direnv
+/tree-sitter-cao_lang/src
