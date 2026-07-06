@@ -108,13 +108,20 @@ export default grammar({
         $.integer,
         $.float,
         $.string,
+        $.nil_literal,
         $.call_expression,
         $.postfix_expression,
         $.binary_expression,
+        $.unary_expression,
         $.if_expression,
         $.array_expression,
         $.table_expression,
         $.closure_expression,
+        $.abort_expression,
+        $.len_expression,
+        $.push_expression,
+        $.pop_expression,
+        $.function_ref_expression,
       ),
 
     call_expression: ($) =>
@@ -123,7 +130,7 @@ export default grammar({
     _callee: ($) => choice($.identifier, $.postfix_expression),
 
     postfix_expression: ($) =>
-      prec(4, seq(
+      prec(8, seq(
         choice($.identifier, $.call_expression),
         repeat1(choice(
           seq(".", field("property", $.identifier)),
@@ -133,9 +140,12 @@ export default grammar({
 
     binary_expression: ($) => {
       const table = [
-        [1, choice("<=", "<", "==", "!=")],
-        [2, choice("+", "-")],
-        [3, choice("*", "/")],
+        [1, "||"],
+        [2, "^"],
+        [3, "&&"],
+        [4, choice("<=", "<", "==", "!=")],
+        [5, choice("+", "-")],
+        [6, choice("*", "/")],
       ];
 
       return choice(
@@ -151,6 +161,9 @@ export default grammar({
         ),
       );
     },
+
+    unary_expression: ($) =>
+      prec(7, seq("!", field("operand", $.expression))),
 
     if_expression: ($) =>
       seq(
@@ -178,6 +191,29 @@ export default grammar({
         "=>",
         field("body", choice($.expression, $.block)),
       )),
+
+    nil_literal: ($) => "nil",
+
+    abort_expression: ($) => "abort",
+
+    len_expression: ($) =>
+      seq("len", "(", field("operand", $.expression), ")"),
+
+    push_expression: ($) =>
+      seq(
+        "push",
+        "(",
+        field("table", $.expression),
+        ",",
+        field("value", $.expression),
+        ")",
+      ),
+
+    pop_expression: ($) =>
+      seq("pop", "(", field("table", $.expression), ")"),
+
+    function_ref_expression: ($) =>
+      seq("&", field("name", $.dotted_path)),
 
     identifier: ($) => /[a-zA-Z_][a-zA-Z0-9_]*/,
 

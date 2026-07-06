@@ -1,0 +1,42 @@
+==================
+function reference
+==================
+
+fn f() {
+    return &fib;
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (block
+      (return_statement
+        (expression
+          (function_ref_expression
+            name: (dotted_path
+              (identifier))))))))
+
+==================
+dotted function reference
+==================
+
+fn f() {
+    return &mod.fib;
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (block
+      (return_statement
+        (expression
+          (function_ref_expression
+            name: (dotted_path
+              (identifier)
+              (identifier))))))))

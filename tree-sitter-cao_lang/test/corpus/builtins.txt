@@ -1,0 +1,106 @@
+==================
+nil literal
+==================
+
+fn f() {
+    return nil;
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (block
+      (return_statement
+        (expression
+          (nil_literal))))))
+
+==================
+abort expression
+==================
+
+fn f() {
+    return abort;
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (block
+      (return_statement
+        (expression
+          (abort_expression))))))
+
+==================
+len expression
+==================
+
+fn f(items) {
+    return len(items);
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list
+      (identifier))
+    (block
+      (return_statement
+        (expression
+          (len_expression
+            operand: (expression
+              (identifier))))))))
+
+==================
+push expression
+==================
+
+fn f(items, v) {
+    push(items, v);
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list
+      (identifier)
+      (identifier))
+    (block
+      (expression_statement
+        (expression
+          (push_expression
+            table: (expression
+              (identifier))
+            value: (expression
+              (identifier))))))))
+
+==================
+pop expression
+==================
+
+fn f(items) {
+    return pop(items);
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list
+      (identifier))
+    (block
+      (return_statement
+        (expression
+          (pop_expression
+            table: (expression
+              (identifier))))))))

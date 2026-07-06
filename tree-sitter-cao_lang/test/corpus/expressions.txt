@@ -219,3 +219,84 @@ fn f(n) {
             consequence: (expression_block
               (expression
                 (identifier)))))))))
+
+==================
+logical operators respect precedence
+==================
+
+fn f() {
+    return a || b ^ c && d;
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (block
+      (return_statement
+        (expression
+          (binary_expression
+            left: (expression
+              (identifier))
+            right: (expression
+              (binary_expression
+                left: (expression
+                  (identifier))
+                right: (expression
+                  (binary_expression
+                    left: (expression
+                      (identifier))
+                    right: (expression
+                      (identifier))))))))))))
+
+==================
+unary not binds tighter than binary operators
+==================
+
+fn f() {
+    return !a && b;
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (block
+      (return_statement
+        (expression
+          (binary_expression
+            left: (expression
+              (unary_expression
+                operand: (expression
+                  (identifier))))
+            right: (expression
+              (identifier))))))))
+
+==================
+unary not binds looser than postfix access
+==================
+
+fn f(a) {
+    return !a.b();
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list
+      (identifier))
+    (block
+      (return_statement
+        (expression
+          (unary_expression
+            operand: (expression
+              (call_expression
+                function: (postfix_expression
+                  (identifier)
+                  property: (identifier))))))))))
