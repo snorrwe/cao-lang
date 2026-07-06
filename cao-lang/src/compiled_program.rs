@@ -1,4 +1,4 @@
-use std::{mem::transmute, str::FromStr};
+use std::{io::Write, mem::transmute, str::FromStr};
 
 use crate::{
     collections::{
@@ -65,6 +65,73 @@ pub struct CaoCompiledProgram {
     pub trace: CaoHashMap<u32, Trace>,
 }
 
+fn write_instruction_name(instr: Instruction, mut writer: impl Write) -> std::io::Result<()> {
+    let name = match instr {
+        Instruction::Add => "Add",
+        Instruction::Sub => "Sub",
+        Instruction::Mul => "Mul",
+        Instruction::Div => "Div",
+        Instruction::CallNative => "CallNative",
+        Instruction::ScalarInt => "ScalarInt",
+        Instruction::ScalarFloat => "ScalarFloat",
+        Instruction::ScalarNil => "ScalarNil",
+        Instruction::StringLiteral => "StringLiteral",
+        Instruction::CopyLast => "CopyLast",
+        Instruction::Exit => "Exit",
+        Instruction::CallFunction => "CallFunction",
+        Instruction::Equals => "Equals",
+        Instruction::NotEquals => "NotEquals",
+        Instruction::Less => "Less",
+        Instruction::LessOrEq => "LessOrEq",
+        Instruction::Pop => "Pop",
+        Instruction::SetGlobalVar => "SetGlobalVar",
+        Instruction::ReadGlobalVar => "ReadGlobalVar",
+        Instruction::SetLocalVar => "SetLocalVar",
+        Instruction::ReadLocalVar => "ReadLocalVar",
+        Instruction::ClearStack => "ClearStack",
+        Instruction::Return => "Return",
+        Instruction::SwapLast => "SwapLast",
+        Instruction::And => "And",
+        Instruction::Or => "Or",
+        Instruction::Xor => "Xor",
+        Instruction::Not => "Not",
+        Instruction::GotoIfTrue => "GotoIfTrue",
+        Instruction::GotoIfFalse => "GotoIfFalse",
+        Instruction::Goto => "Goto",
+        Instruction::InitTable => "InitTable",
+        Instruction::GetProperty => "GetProperty",
+        Instruction::SetProperty => "SetProperty",
+        Instruction::Len => "Len",
+        Instruction::BeginForEach => "BeginForEach",
+        Instruction::ForEach => "ForEach",
+        Instruction::FunctionPointer => "FunctionPointer",
+        Instruction::NativeFunctionPointer => "NativeFunctionPointer",
+        Instruction::NthRow => "NthRow",
+        Instruction::AppendTable => "AppendTable",
+        Instruction::PopTable => "PopTable",
+        Instruction::Closure => "Closure",
+        Instruction::SetUpvalue => "SetUpvalue",
+        Instruction::ReadUpvalue => "ReadUpvalue",
+        Instruction::RegisterUpvalue => "RegisterUpvalue",
+        Instruction::CloseUpvalue => "CloseUpvalue",
+    };
+    write!(writer, "{}", name)
+}
+
+fn write_instruction_args<T: bytemuck::Pod + std::fmt::Debug>(
+    mut writer: impl Write,
+    names: &[&str],
+    mut instruction_ptr: usize,
+    bytecode: &[u8],
+) -> std::io::Result<()> {
+    instruction_ptr += 1;
+    for name in names {
+        let value: T = unsafe { decode_value(bytecode, &mut instruction_ptr) };
+        write!(writer, "\t{}={:?}", name, value)?;
+    }
+    Ok(())
+}
+
 impl CaoCompiledProgram {
     pub fn variable_id(&self, name: &str) -> Option<VariableId> {
         self.variables
@@ -91,58 +158,88 @@ impl CaoCompiledProgram {
             let instr: Instruction = unsafe { transmute(instr) };
             write!(writer, "{i}\t")?;
             // TODO: also print the arguments of the instructions
+            write_instruction_name(instr, &mut writer)?;
             match instr {
-                Instruction::Add => writeln!(writer, "Add")?,
-                Instruction::Sub => writeln!(writer, "Sub")?,
-                Instruction::Mul => writeln!(writer, "Mul")?,
-                Instruction::Div => writeln!(writer, "Div")?,
-                Instruction::CallNative => writeln!(writer, "CallNative")?,
-                Instruction::ScalarInt => writeln!(writer, "ScalarInt")?,
-                Instruction::ScalarFloat => writeln!(writer, "ScalarFloat")?,
-                Instruction::ScalarNil => writeln!(writer, "ScalarNil")?,
-                Instruction::StringLiteral => writeln!(writer, "StringLiteral")?,
-                Instruction::CopyLast => writeln!(writer, "CopyLast")?,
-                Instruction::Exit => writeln!(writer, "Exit")?,
-                Instruction::CallFunction => writeln!(writer, "CallFunction")?,
-                Instruction::Equals => writeln!(writer, "Equals")?,
-                Instruction::NotEquals => writeln!(writer, "NotEquals")?,
-                Instruction::Less => writeln!(writer, "Less")?,
-                Instruction::LessOrEq => writeln!(writer, "LessOrEq")?,
-                Instruction::Pop => writeln!(writer, "Pop")?,
-                Instruction::SetGlobalVar => writeln!(writer, "SetGlobalVar")?,
-                Instruction::ReadGlobalVar => writeln!(writer, "ReadGlobalVar")?,
-                Instruction::SetLocalVar => writeln!(writer, "SetLocalVar")?,
-                Instruction::ReadLocalVar => writeln!(writer, "ReadLocalVar")?,
-                Instruction::ClearStack => writeln!(writer, "ClearStack")?,
-                Instruction::Return => writeln!(writer, "Return")?,
-                Instruction::SwapLast => writeln!(writer, "SwapLast")?,
-                Instruction::And => writeln!(writer, "And")?,
-                Instruction::Or => writeln!(writer, "Or")?,
-                Instruction::Xor => writeln!(writer, "Xor")?,
-                Instruction::Not => writeln!(writer, "Not")?,
+                Instruction::CallFunction
+                | Instruction::Sub
+                | Instruction::Mul
+                | Instruction::Div
+                | Instruction::ScalarNil
+                | Instruction::CopyLast
+                | Instruction::Exit
+                | Instruction::Equals
+                | Instruction::NotEquals
+                | Instruction::Less
+                | Instruction::LessOrEq
+                | Instruction::Pop
+                | Instruction::ClearStack
+                | Instruction::Return
+                | Instruction::SwapLast
+                | Instruction::And
+                | Instruction::Or
+                | Instruction::Xor
+                | Instruction::Not
+                | Instruction::InitTable
+                | Instruction::GetProperty
+                | Instruction::SetProperty
+                | Instruction::Len
+                | Instruction::NthRow
+                | Instruction::AppendTable
+                | Instruction::PopTable
+                | Instruction::CloseUpvalue
+                | Instruction::Add => {}
                 Instruction::GotoIfTrue | Instruction::GotoIfFalse | Instruction::Goto => {
-                    i += 1;
-                    let pos: i32 = unsafe { decode_value(&self.bytecode, &mut i) };
-                    writeln!(writer, "{instr:?}\t{pos}")?;
-                    continue;
+                    write_instruction_args::<i32>(&mut writer, &["pos"], i, &self.bytecode)?;
                 }
-                Instruction::InitTable => writeln!(writer, "InitTable")?,
-                Instruction::GetProperty => writeln!(writer, "GetProperty")?,
-                Instruction::SetProperty => writeln!(writer, "SetProperty")?,
-                Instruction::Len => writeln!(writer, "Len")?,
-                Instruction::BeginForEach => writeln!(writer, "BeginForEach")?,
-                Instruction::ForEach => writeln!(writer, "ForEach")?,
-                Instruction::FunctionPointer => writeln!(writer, "FunctionPointer")?,
-                Instruction::NativeFunctionPointer => writeln!(writer, "NativeFunctionPointer")?,
-                Instruction::NthRow => writeln!(writer, "NthRow")?,
-                Instruction::AppendTable => writeln!(writer, "AppendTable")?,
-                Instruction::PopTable => writeln!(writer, "PopTable")?,
-                Instruction::Closure => writeln!(writer, "Closure")?,
-                Instruction::SetUpvalue => writeln!(writer, "SetUpvalue")?,
-                Instruction::ReadUpvalue => writeln!(writer, "ReadUpvalue")?,
-                Instruction::RegisterUpvalue => writeln!(writer, "RegisterUpvalue")?,
-                Instruction::CloseUpvalue => writeln!(writer, "CloseUpvalue")?,
+                Instruction::CallNative
+                | Instruction::NativeFunctionPointer
+                | Instruction::StringLiteral => {
+                    // TODO: resolve the handle in the data section
+                    write_instruction_args::<Handle>(&mut writer, &["handle"], i, &self.bytecode)?;
+                }
+                Instruction::BeginForEach | Instruction::ForEach => {
+                    write_instruction_args::<u32>(
+                        &mut writer,
+                        &["loop_var", "loop_item", "i_index", "k_index", "v_index"],
+                        i,
+                        &self.bytecode,
+                    )?;
+                }
+                Instruction::FunctionPointer | Instruction::Closure => {
+                    // TODO: resolve the handle in the data section
+                    write_instruction_args::<Handle>(&mut writer, &["handle"], i, &self.bytecode)?;
+                    write_instruction_args::<u32>(&mut writer, &["arity"], i, &self.bytecode)?;
+                }
+                Instruction::SetUpvalue | Instruction::ReadUpvalue => {
+                    write_instruction_args::<u32>(&mut writer, &["index"], i, &self.bytecode)?;
+                }
+                Instruction::RegisterUpvalue => {
+                    write_instruction_args::<u8>(
+                        &mut writer,
+                        &["index", "is_local"],
+                        i,
+                        &self.bytecode,
+                    )?;
+                }
+                Instruction::ScalarInt => {
+                    write_instruction_args::<i64>(&mut writer, &["value"], i, &self.bytecode)?;
+                }
+                Instruction::ScalarFloat => {
+                    write_instruction_args::<f64>(&mut writer, &["value"], i, &self.bytecode)?;
+                }
+                Instruction::SetGlobalVar | Instruction::ReadGlobalVar => {
+                    write_instruction_args::<VariableId>(&mut writer, &["id"], i, &self.bytecode)?;
+                }
+                Instruction::SetLocalVar | Instruction::ReadLocalVar => {
+                    write_instruction_args::<VariableId>(
+                        &mut writer,
+                        &["index"],
+                        i,
+                        &self.bytecode,
+                    )?;
+                }
             }
+            writeln!(writer)?;
             i += instr.span();
         }
         Ok(())
