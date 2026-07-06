@@ -4,7 +4,12 @@ use std::{
     path::PathBuf,
 };
 
-use cao_lang::{traits::into_f1, value::Value, vm::Vm};
+use cao_lang::{
+    compiler::{CaoProgram, compile},
+    traits::into_f1,
+    value::Value,
+    vm::Vm,
+};
 use clap::Parser;
 use clap_derive::Parser;
 
@@ -47,6 +52,17 @@ fn main() {
     parser
         .set_language(&language.into())
         .expect("Error loading CaoLang parser");
-    let tree = parser.parse(input, None).unwrap();
+    let tree = parser
+        .parse(input, None)
+        .expect("Failed to parse caol script");
     tree.print_dot_graph(&std::io::stdout());
+
+    // TODO: turn tree into cao-lang module
+    let module: CaoProgram = todo!();
+
+    let bytecode = compile(module, None).expect("Failed to compile program");
+
+    let mut vm = make_vm();
+
+    vm.run(&bytecode).expect("Runtime error");
 }
