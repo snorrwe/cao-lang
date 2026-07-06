@@ -1,5 +1,6 @@
 fn main(N) {
-    global result = fib(N);
+    result = fib(N);
+    print(result);
 }
 
 fn fib(n) {

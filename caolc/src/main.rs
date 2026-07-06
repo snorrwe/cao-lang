@@ -4,6 +4,7 @@ use std::{
     path::PathBuf,
 };
 
+use cao_lang::{traits::into_f1, value::Value, vm::Vm};
 use clap::Parser;
 use clap_derive::Parser;
 
@@ -12,6 +13,19 @@ struct Args {
     /// Input .caol script file. If omitted, then stdin is used
     #[arg()]
     file: Option<PathBuf>,
+}
+
+fn make_vm() -> Vm<'static> {
+    let mut vm = Vm::new(()).expect("Failed to init VM");
+    vm.register_native_function(
+        "print",
+        into_f1(|_vm, v: Value| {
+            println!("{v:?}");
+            Ok(Value::Nil)
+        }),
+    )
+    .expect("Failed to register print");
+    vm
 }
 
 fn main() {
