@@ -168,6 +168,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "caolc"
+version = "0.1.0"
+dependencies = [
+ "cao-lang",
+ "clap",
+ "clap_derive",
+ "tree-sitter",
+ "tree-sitter-cao-lang",
+]
+
+[[package]]
 name = "caolo-disassembler"
 version = "0.1.0"
 dependencies = [

@@ -6,6 +6,7 @@ members = [
     "xtask",
     "disassembler",
     "tree-sitter-cao_lang",
+    "caolc",
 ]
 exclude = ["wasm"]
 resolver = "2"
