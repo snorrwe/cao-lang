@@ -18,10 +18,15 @@ struct Args {
     /// Input .caol script file. If omitted, then stdin is used
     #[arg()]
     file: Option<PathBuf>,
+
+    /// Integer arguments passed to the program's `main` function
+    #[arg(trailing_var_arg = true, allow_hyphen_values = true)]
+    program_args: Vec<i64>,
 }
 
 fn make_vm() -> Vm<'static> {
     let mut vm = Vm::new(()).expect("Failed to init VM");
+    vm.max_instr = 1_000_000;
     vm.register_native_function(
         "print",
         into_f1(|_vm, v: Value| {
@@ -53,16 +58,20 @@ fn main() {
         .set_language(&language.into())
         .expect("Error loading CaoLang parser");
     let tree = parser
-        .parse(input, None)
+        .parse(&input, None)
         .expect("Failed to parse caol script");
-    tree.print_dot_graph(&std::io::stdout());
 
-    // TODO: turn tree into cao-lang module
-    let module: CaoProgram = todo!();
+    let module: CaoProgram = caolc::frontend::tree_to_program(&tree, &input)
+        .expect("Failed to lower parse tree to program");
 
     let bytecode = compile(module, None).expect("Failed to compile program");
 
     let mut vm = make_vm();
+
+    for arg in args.program_args {
+        vm.stack_push(Value::Integer(arg))
+            .expect("Failed to push program argument");
+    }
 
     vm.run(&bytecode).expect("Runtime error");
 }
