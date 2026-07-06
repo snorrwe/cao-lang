@@ -211,7 +211,6 @@ fn cao_lang_log(vm: &mut Vm<Context>, val: Value) -> Result<Value, ExecutionErro
 #[wasm_bindgen(js_name = "runProgram")]
 pub fn run_program(program: JsValue) -> Result<RunResult, JsValue> {
     let mut vm = Vm::new(Context::default()).expect("Failed to initialize VM");
-    vm.register_native_stdlib().expect("Failed to init stdlib");
     vm.register_native_function("log", into_f1(cao_lang_log))
         .expect("Failed to register log function");
     let program: CaoCompiledProgram = serde_wasm_bindgen::from_value(program).map_err(err_to_js)?;

@@ -88,7 +88,7 @@ impl<Aux> Vm<'_, Aux> {
         Ok(vm)
     }
 
-    pub fn register_native_stdlib(&mut self) -> Result<(), ExecutionErrorPayload>
+    fn register_native_stdlib(&mut self) -> Result<(), ExecutionErrorPayload>
     where
         Aux: 'static,
     {
