@@ -391,9 +391,8 @@ impl Module {
             .push(("std".to_string(), crate::stdlib::standard_library()));
 
         self.ensure_invariants(&mut Default::default())?;
-        // the first function is special
-        //
-        let (main_index, _) = self
+        // ensure program has a main function
+        let _ = self
             .functions
             .iter()
             .enumerate()
@@ -406,8 +405,6 @@ impl Module {
 
         flatten_module(&self, recursion_limit, &mut namespace, &mut result)?;
 
-        // move the main function to the front
-        result.swap(0, main_index);
         Ok(result)
     }
 

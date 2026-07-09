@@ -497,9 +497,15 @@ impl<Aux> Vm<'_, Aux> {
                         })?;
                 }
                 Instruction::Return => {
-                    instr_execution::instr_return(self, instr_ptr).map_err(|err| {
+                    let result = instr_execution::instr_return(self, instr_ptr).map_err(|err| {
                         payload_to_error(err, *instr_ptr, &self.runtime_data.call_stack)
-                    })?;
+                    });
+                    if let Err(ExecutionErrorPayload::ExitCode(_)) =
+                        result.as_ref().map_err(|err| &err.payload)
+                    {
+                        return Ok(());
+                    }
+                    result?;
                 }
                 Instruction::Exit => return Ok(()),
                 Instruction::CopyLast => {

@@ -22,7 +22,7 @@ use std::borrow::Cow;
 use std::convert::TryFrom;
 use std::fmt::Debug;
 use std::mem;
-use std::{convert::TryInto, str::FromStr};
+use std::str::FromStr;
 
 pub use card::*;
 pub use compilation_error::*;
@@ -190,32 +190,12 @@ impl<'a> Compiler<'a> {
 
     /// consume function cards and build the bytecode
     fn compile_stage_2(&mut self, compilation_unit: FunctionSlice<'a>) -> CompilationResult<()> {
-        let mut functions = compilation_unit.iter();
+        self.push_instruction(Instruction::FunctionPointer);
+        self.encode_jump("main")?;
+        self.push_instruction(Instruction::CallFunction);
+        self.push_instruction(Instruction::Exit);
 
-        if let Some(main_function) = functions.next() {
-            let il = main_function.function_index;
-            let len: u32 = match main_function.cards.len().try_into() {
-                Ok(i) => i,
-                Err(_) => return Err(self.error(CompilationErrorPayload::TooManyCards(il))),
-            };
-            self.current_index = CardIndex::new(il, 0);
-            self.scope_begin();
-            self.process_function(main_function)?;
-            self.current_index = CardIndex {
-                function: il,
-                card_index: FunctionCardIndex {
-                    indices: smallvec::smallvec![len],
-                },
-            };
-            self.scope_end();
-            // insert explicit exit after the first function
-            self.process_card(&Card {
-                id: CardId(0),
-                body: CardBody::Abort,
-            })?;
-        }
-
-        for function in functions {
+        for function in compilation_unit.iter() {
             let il = function.function_index;
             self.current_index = CardIndex::function(il);
             let nodeid_handle = function.handle;

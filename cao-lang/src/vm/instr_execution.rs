@@ -301,24 +301,24 @@ pub fn instr_return<T>(vm: &mut Vm<T>, instr_ptr: &mut usize) -> ExecutionResult
         }
     };
 
+    // push the return value
+    trace!("Return {value:?}");
+    vm.stack_push(value)?;
+
     // read the previous frame
     match vm.runtime_data.call_stack.last_mut() {
         Some(CallFrame {
             dst_instr_ptr: ptr, ..
         }) => {
             *instr_ptr = *ptr as usize;
+            Ok(())
         }
         None => {
-            return Err(ExecutionErrorPayload::BadReturn {
-                reason: "Failed to find return address".to_string(),
-            });
+            // if no frame is available, then assume we're in the main function and terminate
+            let code = value.as_int().unwrap_or(-1) as i32;
+            return Err(ExecutionErrorPayload::ExitCode(code));
         }
     }
-
-    // push the return value
-    trace!("Return {value:?}");
-    vm.stack_push(value)?;
-    Ok(())
 }
 
 pub fn instr_copy_last<T>(vm: &mut Vm<T>) -> ExecutionResult {

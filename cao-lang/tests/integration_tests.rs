@@ -1603,3 +1603,26 @@ fn test_empty_list_foreach() {
     let mut vm = Vm::new(()).unwrap();
     vm.run(&program).expect("run");
 }
+
+#[test]
+fn test_can_return_from_main() {
+    let cu = Module {
+        functions: vec![(
+            "main".to_string(),
+            Function {
+                arguments: Default::default(),
+                cards: vec![Card::return_card(Card::scalar_int(42))],
+            },
+        )],
+        ..Default::default()
+    };
+
+    let program = compile(cu, None).expect("compile");
+
+    let mut vm = Vm::new(()).unwrap();
+    vm.run(&program).expect("run");
+
+    let value = vm.stack_pop();
+
+    assert_eq!(Value::Integer(42), value);
+}
